@@ -5,14 +5,14 @@ using namespace global;
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-1, -2}
+  {-16, -17}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{9, 10}
+  ,{12, 13}
 
   // IMU Port
-  ,17
+  ,21
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -26,7 +26,7 @@ Drive chassis (
   //    (or gear ratio of tracking wheel)
   // eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
   // eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-  ,0.6
+  ,1.667
 
   // Uncomment if using tracking wheels
   /*
@@ -53,7 +53,7 @@ void initialize() {
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
   chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
-  chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+  chassis.set_curve_default(0.3, 0.3); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
@@ -62,7 +62,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton("Example Drive\n\nDrive forward and come back.", drive_example),
+    Auton("whatever", whatever),
     Auton("Example Turn\n\nTurn 3 times.", turn_example),
     Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
     Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
@@ -94,7 +94,7 @@ void autonomous() {
 }
 
 void opcontrol() {
-  double flywheel = 1; // flywheel state (enabled / disabled)
+  double flywheel = 1.0; // flywheel state (enabled / disabled)
   int prevFly = 0; // previous flywheel state change
   int prevPower = 0; // previous power change
 
@@ -105,15 +105,17 @@ void opcontrol() {
   intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   feeder.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
+  chassis.set_drive_current_limit(2500);
+
   while (true) {
     // chassis.tank(); // Tank control
     // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
-    chassis.arcade_standard(ez::SINGLE); // Standard single arcade
+    // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
     // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
-    // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
+    chassis.arcade_standard(ez::SINGLE); // Flipped single arcade
 
-    updatePosition(); // update position tracking
-    updateDisplay(); // update controller display
+    // updatePosition(); // update position tracking
+    // updateDisplay(); // update controller display
 
     // FW.move_velocity(flyVelocity * flywheel * flyPower * reverseFW);
     // FW2.move_velocity(flyVelocity * flywheel * flyPower * reverseFW2);
@@ -123,41 +125,42 @@ void opcontrol() {
 
     // Flywheel
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) && elapsed - prevFly > 500) {
-      flywheel = (flywheel == 0.1) ? 1.0: 0.1;
+      flywheel = (flywheel == 0.4) ? 1.0: 0.4;
       prevFly = elapsed;
     }
 
     // Control flywheel power
-    if (minor.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && elapsed - prevPower > 100) {
-      flyPower = (flyPower + 0.05 >= 1) ? 1: flyPower + 0.05;
-      prevPower = elapsed;
-    } else if (minor.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && elapsed - prevPower > 100) {
-      flyPower = (flyPower - 0.05 <= 0) ? 0: flyPower - 0.05;
-      prevPower = elapsed;
-    }
+    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && elapsed - prevPower > 100) {
+    //   flyPower = 0.95;
+    //   prevPower = elapsed;
+    // } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && elapsed - prevPower > 100) {
+    //   flyPower = 0.9;
+    //   prevPower = elapsed;
+    // }
 
     // Aim
-    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) 
-    // chassis.set_turn_pid(targetAngle, aimTurnSpeed);
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) 
+      chassis.set_turn_pid(targetAngle, aimTurnSpeed);
 
     // Intake/Feeder
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       intake.move(127 * reverseIntake);
-      feeder.move(127 * reverseFeeder);
+      feeder.move(-127 * reverseFeeder);
     } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-      intake.move(100 * reverseIntake);
-      feeder.move(-30 * reverseFeeder);
-    } else if (!minor.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+      intake.move(intakeFeedSpeed * reverseIntake);
+      feeder.move(feederFeedSpeed * reverseFeeder);
+    } else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
       intake.move(0);
       feeder.move(0);
     }
 
     // Rollers
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) intake.move(-127 * reverseIntake); // Roll out
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) intake.move(127 * reverseIntake); // Roll in
-
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) feeder.move(127 * reverseIntake); // Roll in
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) intake.move(-127 * reverseIntake); // outtake
-    if (minor.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) intake.move(-127 * reverseIntake); // outtake
+
+    // Limit drive current
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) chassis.set_drive_current_limit(2500);
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) chassis.set_drive_current_limit(1500);
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     elapsed += ez::util::DELAY_TIME; // increase elapsed time

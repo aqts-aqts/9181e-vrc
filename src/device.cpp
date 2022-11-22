@@ -6,16 +6,14 @@ using namespace global;
 namespace global {
     pros::Controller minor(pros::E_CONTROLLER_PARTNER);
 
-    pros::Motor FW(14, pros::E_MOTOR_GEARSET_18);
-    pros::Motor FW2(16, pros::E_MOTOR_GEARSET_18);
+    pros::Motor FW(2, pros::E_MOTOR_GEARSET_18);
+    pros::Motor FW2(14, pros::E_MOTOR_GEARSET_18);
     pros::Motor intake(11, pros::E_MOTOR_GEARSET_18);
     pros::Motor feeder(7, pros::E_MOTOR_GEARSET_36);
 
     pros::ADIDigitalOut SL(0, 0);
     pros::ADIDigitalOut SR(0, 0);
 
-    pros::ADIEncoder encoderLeft(0, 0);
-    pros::ADIEncoder encoderRight(0, 0);
     pros::ADIEncoder encoderX(0, 0);
 
     double flyVelocity;
@@ -23,7 +21,7 @@ namespace global {
     int elapsed;
 
     void init() {
-        flyPower = 0.8; // Flywheel power percentage
+        flyPower = 0.9; // Flywheel power percentage
         elapsed = 0; // Time since opcontrol started
 
         Robot robot;
@@ -44,7 +42,7 @@ namespace global {
         encoderRight.reset();
         encoderX.reset();
     }
-
+    
     void updateDisplay() {
         pros::lcd::print(0, "X: %d", robot.x);
         pros::lcd::print(1, "Y: %d", robot.y);

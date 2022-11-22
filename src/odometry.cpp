@@ -38,14 +38,17 @@ double dy = 0;
 double targetHeight = 0;
 double flyVelocity = 0;
 
+double ringPower[] = {0.9, 0.95};
+double ringRadius[] = {};
+
 namespace global {
     Robot robot; 
     double targetAngle;
     double targetDistance;
     
     void updatePosition() {
-        curLeft = encoderLeft.get_value(); // get encoder positions
-        curRight = encoderRight.get_value(); 
+        curLeft = chassis.left_sensor(); // get encoder positions
+        curRight = chassis.right_sensor(); 
         curTracking = encoderX.get_value(); 
 
         deltaLeft = (curLeft - lastLeft) * (M_PI / 180) * (wheelDiameter / 2); // arc angle changes
@@ -89,15 +92,24 @@ namespace global {
 
         targetX = (robot.team) ? blueGoalX: redGoalX; // get target goal position
         targetY = (robot.team) ? blueGoalY: redGoalY;
-        targetHeight = (robot.team) ? blueHeight: redHeight;
+        // targetHeight = (robot.team) ? blueHeight: redHeight;
 
         dx = targetX - robot.x; // find difference of positions
         dy = targetY - robot.y;
         targetAngle = atan2(dy, dx) * 180 / M_PI; // get target angle for aiming
         targetDistance = sqrt(pow(dx, 2) + pow(dy, 2)); // get distance to target
         
-        flyVelocity = targetDistance / cos(launchAngle); // get linear velocity
-        flyVelocity *= sqrt(gravity / (2 * (targetDistance * tan(launchAngle) - (targetHeight - launchHeight))));
-        flyVelocity *= (60 / (flyRadius * M_PI)); // convert linear velocity to angular velocity (RPM)
+        int i;
+        for (i = 0; i < sizeof(ringRadius) / sizeof(double); i++) {
+            if (ringRadius[i] > targetDistance) break;
+            flyVelocity = ringPower[i];
+        }
+
+        if (!i) flyVelocity = ringPower[0];
+        else if (i == sizeof(ringRadius) / sizeof(double)) flyVelocity = ringPower[sizeof(ringRadius) / sizeof(double)];
+
+        // flyVelocity = targetDistance / cos(launchAngle); // get linear velocity
+        // flyVelocity *= sqrt(gravity / (2 * (targetDistance * tan(launchAngle) - (targetHeight - launchHeight))));
+        // flyVelocity *= (60 / (flyRadius * M_PI)) / flywheelGearRatio; // convert linear velocity to angular velocity (RPM)
     }
 }

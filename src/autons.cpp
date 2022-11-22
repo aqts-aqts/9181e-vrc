@@ -200,6 +200,32 @@ void interfered_example() {
  chassis.wait_drive();
 }
 
-void fourSquares() {
-  chassis.set_drive_pid(6, DRIVE_SPEED);
+void whatever() {
+  chassis.set_drive_pid(-5, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  feeder.move(-127);
+  pros::delay(500);
+
+  chassis.set_drive_pid(12, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(24, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(315, TURN_SPEED);
+  chassis.wait_drive();
+
+  FW.move(127);
+  FW2.move(127);
+
+  intake.move(intakeFeedSpeed * reverseIntake);
+  feeder.move(feederFeedSpeed * reverseFeeder);
+  pros::delay(3000);
+
+  intake.move(0);
+  feeder.move(0);
 }

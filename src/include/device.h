@@ -7,6 +7,10 @@
 #define reverseFeeder -1
 
 #define aimTurnSpeed 117 // easier turning as more power can be allocated to turn rather than just lowering
+#define flywheelGearRatio 7.5 // ratio between motor power and angular velocity of flywheel
+
+#define feederFeedSpeed 30
+#define intakeFeedSpeed 85
 
 namespace global {
     extern pros::Controller minor;
@@ -19,8 +23,6 @@ namespace global {
     extern pros::ADIDigitalOut SL;
     extern pros::ADIDigitalOut SR;
 
-    extern pros::ADIEncoder encoderLeft;
-    extern pros::ADIEncoder encoderRight;
     extern pros::ADIEncoder encoderX;
 
     extern void init();

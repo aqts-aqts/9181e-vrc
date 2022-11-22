@@ -12,13 +12,13 @@
 #define redGoalX 0 // x coordinate of red goal
 #define redGoalY 0 // y coordinate of red goal
 
-#define blueHeight 0 // height of blue goal
-#define redHeight 0 // height of red goal
-#define launchAngle 0 // angle of flywheel launch
-#define launchHeight 0 // height of flywheel launch
+// #define blueHeight 0 // height of blue goal
+// #define redHeight 0 // height of red goal
+// #define launchAngle 0 // angle of flywheel launch
+// #define launchHeight 0 // height of flywheel launch
 
-#define gravity 9.81 // gravitational constant
-#define flyRadius 0 // radius of flywheel in METERS
+// #define gravity 9.81 // gravitational constant
+// #define flyRadius 0 // radius of flywheel in METERS
 
 namespace global {
     struct Robot {
