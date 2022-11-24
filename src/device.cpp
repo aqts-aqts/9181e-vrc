@@ -4,25 +4,24 @@
 using namespace global;
 
 namespace global {
-    pros::Controller minor(pros::E_CONTROLLER_PARTNER);
-
     pros::Motor FW(2, pros::E_MOTOR_GEARSET_18);
     pros::Motor FW2(14, pros::E_MOTOR_GEARSET_18);
     pros::Motor intake(11, pros::E_MOTOR_GEARSET_18);
     pros::Motor feeder(7, pros::E_MOTOR_GEARSET_36);
 
+    pros::Distance indexer(0);
+    pros::ADIEncoder encoder(0, 0);
     pros::ADIDigitalOut SL(0, 0);
     pros::ADIDigitalOut SR(0, 0);
-
-    pros::ADIEncoder encoderX(0, 0);
-
+    
     double flyVelocity;
     double flyPower;
     int elapsed;
 
     void init() {
-        flyPower = 0.9; // Flywheel power percentage
+        flyPower = 1.0; // Flywheel power percentage
         elapsed = 0; // Time since opcontrol started
+        discs = 0; // Number of disks 
 
         Robot robot;
         robot.x = 0;
@@ -36,18 +35,12 @@ namespace global {
         feeder.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
         master.clear();
-        minor.clear();
-        
-        encoderLeft.reset();
-        encoderRight.reset();
-        encoderX.reset();
+        encoder.reset();
     }
     
     void updateDisplay() {
         pros::lcd::print(0, "X: %d", robot.x);
         pros::lcd::print(1, "Y: %d", robot.y);
         pros::lcd::print(2, "Angle: %d", robot.angle);
-        pros::lcd::print(3, "Velocity: %d", flyVelocity);
-        pros::lcd::print(4, "Power: %d", flyPower);
     }
 }

@@ -98,6 +98,9 @@ void opcontrol() {
   int prevFly = 0; // previous flywheel state change
   int prevPower = 0; // previous power change
 
+  int prevDisc = -1000; // last disc seen
+  double prevDist = indexer.get(); // previous distance to cup holder base
+
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
   FW.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -143,13 +146,13 @@ void opcontrol() {
       chassis.set_turn_pid(targetAngle, aimTurnSpeed);
 
     // Intake/Feeder
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // intake
       intake.move(127 * reverseIntake);
       feeder.move(-127 * reverseFeeder);
-    } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+    } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // feed
       intake.move(intakeFeedSpeed * reverseIntake);
       feeder.move(feederFeedSpeed * reverseFeeder);
-    } else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+    } else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // stop
       intake.move(0);
       feeder.move(0);
     }
@@ -161,6 +164,15 @@ void opcontrol() {
     // Limit drive current
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) chassis.set_drive_current_limit(2500);
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) chassis.set_drive_current_limit(1500);
+
+    // Index discs
+    if (indexer.get() - prevDist > minDiscWidth) {
+      discs += 1;
+      prevDisc = elapsed;
+    } else if (indexer.get() - prevDist < -minDiscWidth) {
+      discs -= 1;
+      prevDisc = elapsed;
+    }
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     elapsed += ez::util::DELAY_TIME; // increase elapsed time

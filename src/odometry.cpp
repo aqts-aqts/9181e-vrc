@@ -49,7 +49,7 @@ namespace global {
     void updatePosition() {
         curLeft = chassis.left_sensor(); // get encoder positions
         curRight = chassis.right_sensor(); 
-        curTracking = encoderX.get_value(); 
+        curTracking = encoder.get_value(); 
 
         deltaLeft = (curLeft - lastLeft) * (M_PI / 180) * (wheelDiameter / 2); // arc angle changes
         deltaRight = (curRight - lastRight) * (M_PI / 180) * (wheelDiameter / 2);
@@ -99,6 +99,7 @@ namespace global {
         targetAngle = atan2(dy, dx) * 180 / M_PI; // get target angle for aiming
         targetDistance = sqrt(pow(dx, 2) + pow(dy, 2)); // get distance to target
         
+        // get location in ring map
         int i;
         for (i = 0; i < sizeof(ringRadius) / sizeof(double); i++) {
             if (ringRadius[i] > targetDistance) break;

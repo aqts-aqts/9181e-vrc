@@ -11,19 +11,18 @@
 
 #define feederFeedSpeed 30
 #define intakeFeedSpeed 85
+#define minDiscWidth 5
 
 namespace global {
-    extern pros::Controller minor;
-
     extern pros::Motor FW;
     extern pros::Motor FW2;
     extern pros::Motor intake;
     extern pros::Motor feeder;
 
+    extern pros::Distance indexer;
     extern pros::ADIDigitalOut SL;
     extern pros::ADIDigitalOut SR;
-
-    extern pros::ADIEncoder encoderX;
+    extern pros::ADIEncoder encoder;
 
     extern void init();
     extern void updateDisplay();
@@ -31,4 +30,5 @@ namespace global {
     extern double flyVelocity;
     extern double flyPower;
     extern int elapsed;
+    extern int discs;
 }
