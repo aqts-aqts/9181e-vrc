@@ -62,13 +62,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton("whatever", whatever),
-    Auton("Example Turn\n\nTurn 3 times.", turn_example),
-    Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
-    Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
-    Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
-    Auton("Combine all 3 movements", combining_movements),
-    Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
+    Auton("whatever", whatever)
   });
 
   // Initialize chassis and auton selector
@@ -98,8 +92,8 @@ void opcontrol() {
   int prevFly = 0; // previous flywheel state change
   int prevPower = 0; // previous power change
 
-  int prevDisc = -1000; // last disc seen
-  double prevDist = indexer.get(); // previous distance to cup holder base
+  // int prevDisc = -1000; // last disc seen
+  // double prevDist = indexer.get(); // previous distance to cup holder base
 
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_BRAKE);
@@ -166,13 +160,13 @@ void opcontrol() {
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) chassis.set_drive_current_limit(1500);
 
     // Index discs
-    if (indexer.get() - prevDist > minDiscWidth) {
-      discs += 1;
-      prevDisc = elapsed;
-    } else if (indexer.get() - prevDist < -minDiscWidth) {
-      discs -= 1;
-      prevDisc = elapsed;
-    }
+    // if (indexer.get() - prevDist > minDiscWidth) {
+    //   discs += 1;
+    //   prevDisc = elapsed;
+    // } else if (indexer.get() - prevDist < -minDiscWidth) {
+    //   discs -= 1;
+    //   prevDisc = elapsed;
+    // }
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     elapsed += ez::util::DELAY_TIME; // increase elapsed time

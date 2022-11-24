@@ -19,7 +19,7 @@ namespace global {
     extern pros::Motor intake;
     extern pros::Motor feeder;
 
-    extern pros::Distance indexer;
+    // extern pros::Distance indexer;
     extern pros::ADIDigitalOut SL;
     extern pros::ADIDigitalOut SR;
     extern pros::ADIEncoder encoder;
@@ -30,5 +30,5 @@ namespace global {
     extern double flyVelocity;
     extern double flyPower;
     extern int elapsed;
-    extern int discs;
+    // extern int discs;
 }
