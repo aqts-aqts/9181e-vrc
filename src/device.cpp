@@ -9,7 +9,8 @@ namespace global {
     pros::Motor intake(11, pros::E_MOTOR_GEARSET_18);
     pros::Motor feeder(7, pros::E_MOTOR_GEARSET_36);
 
-    // pros::Distance indexer(0);
+    pros::Distance indexer(0);
+    pros::Optical colour(0);
     pros::ADIEncoder encoder(0, 0);
     pros::ADIDigitalOut SL(0, 0);
     pros::ADIDigitalOut SR(0, 0);
@@ -19,9 +20,9 @@ namespace global {
     int elapsed;
 
     void init() {
-        flyPower = 1.0; // Flywheel power percentage
+        flyPower = 0.8; // Flywheel power percentage
         elapsed = 0; // Time since opcontrol started
-        // discs = 0; // Number of disks 
+        discs = 0; // Number of disks 
 
         Robot robot;
         robot.x = 0;

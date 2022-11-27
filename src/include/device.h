@@ -1,5 +1,5 @@
 #pragma once
-#include "main.h"   
+#include "main.h"
 
 #define reverseFW 1
 #define reverseFW2 -1
@@ -9,7 +9,7 @@
 #define aimTurnSpeed 117 // easier turning as more power can be allocated to turn rather than just lowering
 #define flywheelGearRatio 7.5 // ratio between motor power and angular velocity of flywheel
 
-#define feederFeedSpeed 30
+#define feederFeedSpeed 127
 #define intakeFeedSpeed 85
 #define minDiscWidth 5
 
@@ -19,7 +19,8 @@ namespace global {
     extern pros::Motor intake;
     extern pros::Motor feeder;
 
-    // extern pros::Distance indexer;
+    extern pros::Distance indexer;
+    extern pros::Optical colour;
     extern pros::ADIDigitalOut SL;
     extern pros::ADIDigitalOut SR;
     extern pros::ADIEncoder encoder;
@@ -30,5 +31,5 @@ namespace global {
     extern double flyVelocity;
     extern double flyPower;
     extern int elapsed;
-    // extern int discs;
+    extern int discs;
 }

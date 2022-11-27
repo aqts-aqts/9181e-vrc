@@ -37,32 +37,37 @@ void modified_exit_condition() {
   chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
-void whatever() {
-  chassis.set_drive_pid(-5, DRIVE_SPEED, true);
+void left_side() {
+  chassis.set_drive_pid(-5, DRIVE_SPEED, true); // back into roller
   chassis.wait_drive();
 
-  feeder.move(-127);
+  feeder.move(-127); // roll roller
   pros::delay(500);
 
   chassis.set_drive_pid(12, DRIVE_SPEED, true);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.set_turn_pid(45, TURN_SPEED); // turn to move to middle
   chassis.wait_drive();
 
-  chassis.set_drive_pid(24, DRIVE_SPEED, true);
+  chassis.set_drive_pid(24, DRIVE_SPEED, true); // move to middle
   chassis.wait_drive();
 
-  chassis.set_turn_pid(315, TURN_SPEED);
+  chassis.set_turn_pid(315, TURN_SPEED); // face goal
   chassis.wait_drive();
 
-  FW.move(127);
+  FW.move(127); // start flywheel
   FW2.move(127);
 
-  intake.move(intakeFeedSpeed * reverseIntake);
+  intake.move(intakeFeedSpeed * reverseIntake); // feed
   feeder.move(feederFeedSpeed * reverseFeeder);
   pros::delay(3000);
 
+  FW.move(0);
+  FW2.move(0);
   intake.move(0);
   feeder.move(0);
 }
+
+void right_side() {}
+void solo_awp() {}

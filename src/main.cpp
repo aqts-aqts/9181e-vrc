@@ -52,7 +52,7 @@ void initialize() {
 
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
-  chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
+  chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
   chassis.set_curve_default(0.3, 0.3); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
 
@@ -62,7 +62,9 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton("whatever", whatever)
+    Auton("Left side", left_side),
+    Auton("Right side", right_side),
+    Auton("Solo win point", solo_awp)
   });
 
   // Initialize chassis and auton selector
@@ -91,7 +93,6 @@ void opcontrol() {
   double flywheel = 1.0; // flywheel state (enabled / disabled)
   int prevFly = 0; // previous flywheel state change
   int prevPower = 0; // previous power change
-
   // int prevDisc = -1000; // last disc seen
   // double prevDist = indexer.get(); // previous distance to cup holder base
 
@@ -112,7 +113,7 @@ void opcontrol() {
     chassis.arcade_standard(ez::SINGLE); // Flipped single arcade
 
     // updatePosition(); // update position tracking
-    // updateDisplay(); // update controller display
+    // updateDisplay(); // update brain display
 
     // FW.move_velocity(flyVelocity * flywheel * flyPower * reverseFW);
     // FW2.move_velocity(flyVelocity * flywheel * flyPower * reverseFW2);
@@ -127,20 +128,20 @@ void opcontrol() {
     }
 
     // Control flywheel power
-    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && elapsed - prevPower > 100) {
-    //   flyPower = 0.95;
-    //   prevPower = elapsed;
-    // } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && elapsed - prevPower > 100) {
-    //   flyPower = 0.9;
-    //   prevPower = elapsed;
-    // }
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && elapsed - prevPower > 100) {
+      flyPower = 0.95;
+      prevPower = elapsed;
+    } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && elapsed - prevPower > 100) {
+      flyPower = 0.8;
+      prevPower = elapsed;
+    }
 
     // Aim
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) 
-      chassis.set_turn_pid(targetAngle, aimTurnSpeed);
+    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) 
+    //   chassis.set_turn_pid(targetAngle, aimTurnSpeed);
 
     // Intake/Feeder
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // intake
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && discs < 3) { // intake
       intake.move(127 * reverseIntake);
       feeder.move(-127 * reverseFeeder);
     } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // feed
@@ -153,7 +154,10 @@ void opcontrol() {
 
     // Rollers
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) feeder.move(127 * reverseIntake); // Roll in
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) intake.move(-127 * reverseIntake); // outtake
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) { // outtake
+      intake.move(-127 * reverseIntake);
+      feeder.move(127 * reverseFeeder);
+    }
 
     // Limit drive current
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) chassis.set_drive_current_limit(2500);
