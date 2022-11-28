@@ -31,5 +31,5 @@ namespace global {
     extern double flyVelocity;
     extern double flyPower;
     extern int elapsed;
-    extern int discs;
+    // extern int discs;
 }

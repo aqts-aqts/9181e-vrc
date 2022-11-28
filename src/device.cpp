@@ -22,7 +22,7 @@ namespace global {
     void init() {
         flyPower = 0.8; // Flywheel power percentage
         elapsed = 0; // Time since opcontrol started
-        discs = 0; // Number of disks 
+        // discs = 0; // Number of disks 
 
         Robot robot;
         robot.x = 0;

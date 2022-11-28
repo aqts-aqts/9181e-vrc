@@ -141,16 +141,16 @@ void opcontrol() {
     //   chassis.set_turn_pid(targetAngle, aimTurnSpeed);
 
     // Intake/Feeder
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && discs < 3) { // intake
-      intake.move(127 * reverseIntake);
-      feeder.move(-127 * reverseFeeder);
-    } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // feed
-      intake.move(intakeFeedSpeed * reverseIntake);
-      feeder.move(feederFeedSpeed * reverseFeeder);
-    } else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // stop
-      intake.move(0);
-      feeder.move(0);
-    }
+    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && discs < 3) { // intake
+    //   intake.move(127 * reverseIntake);
+    //   feeder.move(-127 * reverseFeeder);
+    // } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // feed
+    //   intake.move(intakeFeedSpeed * reverseIntake);
+    //   feeder.move(feederFeedSpeed * reverseFeeder);
+    // } else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // stop
+    //   intake.move(0);
+    //   feeder.move(0);
+    // }
 
     // Rollers
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) feeder.move(127 * reverseIntake); // Roll in
