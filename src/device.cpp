@@ -4,13 +4,13 @@
 using namespace global;
 
 namespace global {
-    pros::Motor FW(2, pros::E_MOTOR_GEARSET_18);
-    pros::Motor FW2(14, pros::E_MOTOR_GEARSET_18);
+    pros::Motor FW(2, pros::E_MOTOR_GEARSET_06);
+    pros::Motor FW2(14, pros::E_MOTOR_GEARSET_06);
     pros::Motor intake(11, pros::E_MOTOR_GEARSET_18);
-    pros::Motor feeder(7, pros::E_MOTOR_GEARSET_36);
+    pros::Motor indexer(3, pros::E_MOTOR_GEARSET_36);
 
-    pros::Distance indexer(0);
     pros::Optical colour(0);
+    pros::Vision vision(0);
     pros::ADIEncoder encoder(0, 0);
     pros::ADIDigitalOut SL(0, 0);
     pros::ADIDigitalOut SR(0, 0);
@@ -20,7 +20,7 @@ namespace global {
     int elapsed;
 
     void init() {
-        flyPower = 0.8; // Flywheel power percentage
+        flyPower = 0.82; // Flywheel power percentage
         elapsed = 0; // Time since opcontrol started
         // discs = 0; // Number of disks 
 
@@ -33,7 +33,7 @@ namespace global {
         FW.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         FW2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-        feeder.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        indexer.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
         master.clear();
         encoder.reset();

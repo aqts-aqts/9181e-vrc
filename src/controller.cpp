@@ -1,36 +1,32 @@
 #include "main.h"
 using namespace global;
 
+double prevError = 0;
+double totalError = 0;
+double derivative;
+double motorPower;
+
 namespace global {
-    void take(int delay, bool stop, int iV=intakeVolts, int fV=feederVolts) {
-        intake.move(iV * reverseIntake);
-        feeder.move(fV * reverseFeeder);
-        pros::delay(delay);
-        if (stop) {
-            intake.move(0);
-            feeder.move(0);
+    void aim(bool team, double maxVel=110) {
+        pros::vision_object_s_t goal;
+        while (goal.x_middle_coord < boundary) {
+            goal = pros::c::vision_get_by_sig(VISION_PORT, 0, (team) ? RED_SIG: BLUE_SIG);
+            totalError += goal.x_middle_coord;
+            derivative = goal.x_middle_coord - prevError;
+
+            motorPower = goal.x_middle_coord * aimkP + totalError * aimkI + derivative * aimkD;
+            for (pros::Motor motor: chassis.left_motors) motor.move(motorPower);
+            for (pros::Motor motor: chassis.right_motors) motor.move(-motorPower);
+            prevError = goal.x_middle_coord;
+            pros::delay(10);
         }
     }
 
-    void feed(int delay, bool stop, int iV=intakeFeedSpeed, int fV=feederFeedSpeed) {
-        intake.move(iV * reverseIntake);
-        feeder.move(fV * reverseIntake);
-        pros::delay(delay);
-        if (stop) {
-            intake.move(0);
-            feeder.move(0);
-        }
-    }
-
-    void roll(bool team, int fV=rollerVolts, int maxTime=500, int delayStep=10) {
-        feeder.move(fV * reverseIntake);
-        pros::c::optical_rgb_s_t rgb;
-        int timeElapsed = 0;
-
-        while (timeElapsed < maxTime) {
-            if (((team) ? rgb.red: rgb.blue) > ((team) ? redRollMin: blueRollMin)) {
-                
-            }
-        }
+    void roll(bool team, double iV=-127, bool stop=1) {
+        pros::c::optical_rgb_s_t rgb = colour.get_rgb();
+        bool rolled = (team) ? (rgb.red > rgb.blue): (rgb.blue < rgb.red); // blue = 0, red = 1
+        indexer.move(iV * reverseIndexer);
+        while (!rolled) pros::delay(10);
+        if (stop) indexer.move(0);
     }
 }

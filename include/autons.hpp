@@ -8,6 +8,12 @@ void default_constants();
 void exit_condition_defaults();
 void modified_exit_condition();
 
+// main routes
 void left_side();
 void right_side();
 void solo_awp();
+
+// extensions
+void closePreload();
+void shootFirst();
+void threeDiscs();

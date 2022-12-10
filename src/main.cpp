@@ -12,7 +12,7 @@ Drive chassis (
   ,{12, 13}
 
   // IMU Port
-  ,21
+  ,6
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -63,8 +63,8 @@ void initialize() {
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
     Auton("Left side", left_side),
-    Auton("Right side", right_side),
-    Auton("Solo win point", solo_awp)
+    Auton("Right side", left_side),
+    Auton("Solo win point", left_side)
   });
 
   // Initialize chassis and auton selector
@@ -101,7 +101,7 @@ void opcontrol() {
   FW.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   FW2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-  feeder.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+  indexer.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
   chassis.set_drive_current_limit(2500);
 
@@ -132,31 +132,30 @@ void opcontrol() {
       flyPower = 0.95;
       prevPower = elapsed;
     } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && elapsed - prevPower > 100) {
-      flyPower = 0.8;
+      flyPower = 0.82;
       prevPower = elapsed;
     }
 
     // Aim
-    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) 
-    //   chassis.set_turn_pid(targetAngle, aimTurnSpeed);
+    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) aim(robot.team, 80);
 
-    // Intake/Feeder
-    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && discs < 3) { // intake
-    //   intake.move(127 * reverseIntake);
-    //   feeder.move(-127 * reverseFeeder);
-    // } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // feed
-    //   intake.move(intakeFeedSpeed * reverseIntake);
-    //   feeder.move(feederFeedSpeed * reverseFeeder);
-    // } else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // stop
-    //   intake.move(0);
-    //   feeder.move(0);
-    // }
+    // Intake/indexer
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // intake
+      intake.move(127 * reverseIntake);
+      indexer.move(-127 * reverseIndexer);
+    } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // feed
+      intake.move(intakeFeedSpeed * reverseIntake);
+      indexer.move(indexerFeedSpeed * reverseIndexer);
+    } else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // stop
+      intake.move(0);
+      indexer.move(0);
+    }
 
     // Rollers
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) feeder.move(127 * reverseIntake); // Roll in
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) indexer.move(-127 * reverseIntake); // Roll in
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) { // outtake
       intake.move(-127 * reverseIntake);
-      feeder.move(127 * reverseFeeder);
+      indexer.move(-127 * reverseIndexer);
     }
 
     // Limit drive current
