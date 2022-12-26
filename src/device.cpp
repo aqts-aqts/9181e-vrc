@@ -20,7 +20,7 @@ namespace global {
     int elapsed;
 
     void init() {
-        flyPower = 0.82; // Flywheel power percentage
+        flyPower = 0.825; // Flywheel power percentage
         elapsed = 0; // Time since opcontrol started
         // discs = 0; // Number of disks 
 

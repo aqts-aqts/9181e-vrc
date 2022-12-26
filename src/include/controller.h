@@ -12,9 +12,8 @@
 #define aimkP 0
 #define aimkI 0
 #define aimkD 0
-#define boundary 10
 
 namespace global {
-    void aim(bool team, double maxVel);
-    void roll(bool team, double iV, bool stop);
+    void aim(bool team, double bound);
+    void roll(bool team, double volts, bool stop);
 }

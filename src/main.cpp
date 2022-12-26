@@ -62,9 +62,9 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton("Left side", left_side),
-    Auton("Right side", left_side),
-    Auton("Solo win point", left_side)
+    Auton("Left side", programmingSkills),
+    Auton("Right side", programmingSkills),
+    Auton("Solo win point", programmingSkills)
   });
 
   // Initialize chassis and auton selector
@@ -103,7 +103,7 @@ void opcontrol() {
   intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   indexer.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
-  chassis.set_drive_current_limit(2500);
+  chassis.set_drive_current_limit(1500);
 
   while (true) {
     // chassis.tank(); // Tank control
@@ -129,20 +129,20 @@ void opcontrol() {
 
     // Control flywheel power
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && elapsed - prevPower > 100) {
-      flyPower = 0.95;
+      flyPower = 0.98;
       prevPower = elapsed;
     } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && elapsed - prevPower > 100) {
-      flyPower = 0.82;
+      flyPower = 0.825;
       prevPower = elapsed;
     }
 
     // Aim
-    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) aim(robot.team, 80);
+    // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) aim(robot.team, 10);
 
     // Intake/indexer
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // intake
-      intake.move(127 * reverseIntake);
-      indexer.move(-127 * reverseIndexer);
+      intake.move(intakeFeedSpeed * reverseIntake);
+      indexer.move(-indexerFeedSpeed * reverseIndexer);
     } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // feed
       intake.move(intakeFeedSpeed * reverseIntake);
       indexer.move(indexerFeedSpeed * reverseIndexer);
@@ -152,7 +152,9 @@ void opcontrol() {
     }
 
     // Rollers
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) indexer.move(-127 * reverseIntake); // Roll in
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+      indexer.move(-127 * reverseIntake); // Roll in
+    }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) { // outtake
       intake.move(-127 * reverseIntake);
       indexer.move(-127 * reverseIndexer);

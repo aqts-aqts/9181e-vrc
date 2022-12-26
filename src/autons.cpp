@@ -38,25 +38,86 @@ void modified_exit_condition() {
 }
 
 void left_side() {
-  indexer.move(-127 * reverseIndexer); // roll roller
-
-  FW.move(1 * 127 * reverseFW); // start flywheel
-  FW2.move(1 * 127 * reverseFW2);
+  indexer.move(60 * reverseIndexer); // roll roller
 
   chassis.set_drive_pid(-4, DRIVE_SPEED, true); // back into roller
   chassis.wait_drive();
-
-  chassis.set_drive_pid(7, DRIVE_SPEED, true);
-  chassis.wait_drive();
   indexer.move(0);
 
-  chassis.set_turn_pid(-12, TURN_SPEED);
+  chassis.set_drive_pid(2, DRIVE_SPEED, true); // back into roller
   chassis.wait_drive();
 
+  chassis.set_swing_pid(ez::LEFT_SWING, 51, SWING_SPEED); // turn to move to middle
+  chassis.wait_drive();
+
+  FW.move(0.92 * 127 * reverseFW); // start flywheel
+  FW2.move(0.92 * 127 * reverseFW2);
+
   intake.move(127 * reverseIntake);
-  pros::delay(3000);
+  indexer.move(-127 * reverseIndexer);
+
+  chassis.set_drive_pid(47, 88, true);
+  chassis.wait_drive();
+
+  pros::delay(100); // delay
+
+  chassis.set_turn_pid(-38, TURN_SPEED); // face goal
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(9, DRIVE_SPEED, true);
+  chassis.wait_until(1);
+  indexer.move(0);
+  chassis.wait_until(2);
+
   indexer.move(indexerFeedSpeed * reverseIndexer);
-  pros::delay(300);
+  pros::delay(100);
+
+  indexer.move(-indexerFeedSpeed * reverseIndexer);
+  pros::delay(500);
+  indexer.move(0);
+  pros::delay(400);
+
+  FW.move(0.97 * 127 * reverseFW); // start flywheel
+  FW2.move(0.97 * 127 * reverseFW2);
+
+  indexer.move(indexerFeedSpeed * reverseIndexer);
+  pros::delay(200);
+
+  indexer.move(-indexerFeedSpeed * reverseIndexer);
+  pros::delay(500);
+  indexer.move(0);
+  pros::delay(400);
+  
+  FW.move(0.97 * 127 * reverseFW); // start flywheel
+  FW2.move(0.97 * 127 * reverseFW2);
+
+  indexer.move(indexerFeedSpeed * reverseIndexer);
+  pros::delay(400);
+  indexer.move(0);
+  pros::delay(200);
+
+  FW.move(0.97 * 127 * reverseFW); // start flywheel
+  FW2.move(0.97 * 127 * reverseFW2);
+
+  intake.move(127 * reverseIntake);
+  indexer.move(-127 * reverseIndexer);
+
+  chassis.set_swing_pid(ez::RIGHT_SWING, 44, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(54, 99, true);
+  chassis.wait_drive();
+
+  indexer.move(0);
+
+  chassis.set_swing_pid(ez::LEFT_SWING, -60, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(16, DRIVE_SPEED, true);
+  chassis.wait_until(2);
+
+  indexer.move(indexerFeedSpeed * reverseIndexer);
+  pros::delay(100);
 
   indexer.move(-indexerFeedSpeed * reverseIndexer);
   pros::delay(500);
@@ -64,71 +125,95 @@ void left_side() {
   pros::delay(400);
 
   indexer.move(indexerFeedSpeed * reverseIndexer);
-  pros::delay(300);
+  pros::delay(200);
+
+  indexer.move(-indexerFeedSpeed * reverseIndexer);
+  pros::delay(500);
+  indexer.move(0);
+  pros::delay(400);
+  
+  indexer.move(indexerFeedSpeed * reverseIndexer);
+  pros::delay(400);
   indexer.move(0);
   pros::delay(200);
 
-  chassis.set_turn_pid(52, TURN_SPEED); // turn to move to middle
+  FW.move(0);
+  FW2.move(0);
+  intake.move(0);
+}
+
+void solo_awp() {
+  indexer.move(60 * reverseIndexer); // roll roller
+
+  chassis.set_drive_pid(-4, DRIVE_SPEED, true); // back into roller
+  chassis.wait_drive();
+  indexer.move(0);
+
+  chassis.set_drive_pid(2, DRIVE_SPEED, true); // back into roller
+  chassis.wait_drive();
+
+  chassis.set_swing_pid(ez::LEFT_SWING, 51, SWING_SPEED); // turn to move to middle
   chassis.wait_drive();
 
   FW.move(0.92 * 127 * reverseFW); // start flywheel
   FW2.move(0.92 * 127 * reverseFW2);
 
-  chassis.set_drive_pid(35, DRIVE_SPEED, true);
-  chassis.wait_drive();
-
+  intake.move(127 * reverseIntake);
   indexer.move(-127 * reverseIndexer);
 
-  chassis.set_drive_pid(15, 40, true); // move to middle
+  chassis.set_drive_pid(47, 88, true);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(-38, SWING_SPEED); // face goal
+  pros::delay(100); // delay
+
+  chassis.set_turn_pid(-38, TURN_SPEED); // face goal
   chassis.wait_drive();
 
+  chassis.set_drive_pid(9, DRIVE_SPEED, true);
+  chassis.wait_until(1);
   indexer.move(0);
+  chassis.wait_until(2);
 
-  chassis.set_drive_pid(7, DRIVE_SPEED, true);
-  chassis.wait_drive();
+  indexer.move(indexerFeedSpeed * reverseIndexer);
+  pros::delay(100);
 
-  pros::delay(600);
-  
-  /*// uncomment for only shooting
-  FW.move(0.99 * 127 * reverseFW); // start flywheel
-  FW2.move(0.99 * 127 * reverseFW2);
-  intake.move(127 * reverseIntake);
-  pros::delay(4000);*/
+  indexer.move(-indexerFeedSpeed * reverseIndexer);
+  pros::delay(500);
+  indexer.move(0);
+  pros::delay(400);
 
-  for (int i = 0; i < 2; i++) {
-    indexer.move(indexerFeedSpeed * reverseIndexer);
-    pros::delay(200);
+  FW.move(0.97 * 127 * reverseFW); // start flywheel
+  FW2.move(0.97 * 127 * reverseFW2);
 
-    indexer.move(-indexerFeedSpeed * reverseIndexer);
-    pros::delay(500);
-    indexer.move(0);
-    pros::delay(400);
-
-    FW.move(0.9 * 127 * reverseFW); // start flywheel
-    FW2.move(0.9 * 127 * reverseFW2);
-  }
-  
   indexer.move(indexerFeedSpeed * reverseIndexer);
   pros::delay(200);
-  indexer.move(0);
-  pros::delay(300);
 
-  FW.move(0);
-  FW2.move(0);
+  indexer.move(-indexerFeedSpeed * reverseIndexer);
+  pros::delay(500);
+  indexer.move(0);
+  pros::delay(400);
+  
+  FW.move(0.97 * 127 * reverseFW); // start flywheel
+  FW2.move(0.97 * 127 * reverseFW2);
+
+  indexer.move(indexerFeedSpeed * reverseIndexer);
+  pros::delay(400);
+  indexer.move(0);
+  pros::delay(200);
 
   intake.move(127 * reverseIntake);
   indexer.move(-127 * reverseIndexer);
+
+  FW.move(0); // stop flywheel
+  FW2.move(0);
 
   chassis.set_drive_pid(-12, DRIVE_SPEED, true);
   chassis.wait_drive();
 
-  chassis.set_swing_pid(ez::LEFT_SWING, 42.5, SWING_SPEED);
+  chassis.set_swing_pid(ez::LEFT_SWING, 44, SWING_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(85, DRIVE_SPEED, true);
+  chassis.set_drive_pid(78, DRIVE_SPEED, true);
   chassis.wait_drive();
 
   intake.move(0);
@@ -137,16 +222,108 @@ void left_side() {
   chassis.set_turn_pid(-90, TURN_SPEED);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-4, DRIVE_SPEED, true); // back into roller
+  chassis.set_drive_pid(-7, DRIVE_SPEED, true); // back into roller
   chassis.wait_drive();
 
-  chassis.set_drive_pid(3, DRIVE_SPEED, true);
+  chassis.set_drive_pid(1, DRIVE_SPEED, true);
   chassis.wait_drive();
 
   indexer.move(0);
 }
 
-void right_side() {
+void programmingSkills() {
+  indexer.move(-80 * reverseIndexer); // roll roller
+
+  chassis.set_drive_pid(-3, DRIVE_SPEED, true); // back into roller
+  chassis.wait_drive();
+
+  intake.move(127 * reverseIntake);
+  chassis.set_drive_pid(26, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  indexer.move(0); 
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+
+  indexer.move(-80 * reverseIndexer); // roll roller
+  FW.move(0.845 * 127 * reverseFW); // start flywheel
+  FW2.move(0.845 * 127 * reverseFW2);
+
+  chassis.set_drive_pid(-25, DRIVE_SPEED, true); // back into roller
+  chassis.wait_drive();
+  indexer.move(0);
+
+  chassis.set_swing_pid(ez::RIGHT_SWING, 0, SWING_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(38, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  indexer.move(127 * reverseIndexer);
+  pros::delay(1500);
+  
+  indexer.move(-127 * reverseIntake);
+  FW.move(0.86 * 127 * reverseFW); // start flywheel
+  FW2.move(0.86 * 127 * reverseFW2);
+
+  chassis.set_drive_pid(-38, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(59, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(7, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  indexer.move(127 * reverseIndexer);
+  pros::delay(1500);
+
+  indexer.move(-127 * reverseIndexer);
+  FW.move(0.855 * 127 * reverseFW); // start flywheel
+  FW2.move(0.855 * 127 * reverseFW2);
+
+  chassis.set_drive_pid(-8, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(45, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(40, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(19, 80, true);
+  chassis.wait_drive();
+
+  indexer.move(0);
+  chassis.set_turn_pid(-90, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(35, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  indexer.move(127 * reverseIndexer);
+  pros::delay(1500);
+
+  /*chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(40, DRIVE_SPEED, true);
+  chassis.wait_drive();
+
+  chassis.set_swing_pid(ez::RIGHT_SWING, 180, SWING_SPEED);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+  chassis.wait_drive();*/
+}
+
+/*void right_side() {
   chassis.set_drive_pid(27, DRIVE_SPEED, true);
   chassis.wait_drive();
 
@@ -188,88 +365,4 @@ void right_side() {
 
   chassis.set_drive_pid(3, DRIVE_SPEED, true);
   chassis.wait_drive();
-}
-
-
-void solo_awp() {
-  indexer.move(50 * reverseIndexer); // roll roller
-
-  chassis.set_drive_pid(-4, DRIVE_SPEED, true); // back into roller
-  chassis.wait_drive();
-  indexer.move(0);
-
-  chassis.set_swing_pid(ez::LEFT_SWING, 52, SWING_SPEED); // turn to move to middle
-  chassis.wait_drive();
-
-  FW.move(0.95 * 127 * reverseFW); // start flywheel
-  FW2.move(0.95 * 127 * reverseFW2);
-
-  chassis.set_drive_pid(36, DRIVE_SPEED, true);
-  chassis.wait_drive();
-
-  intake.move(127 * reverseIntake);
-  indexer.move(-127 * reverseIndexer);
-
-  chassis.set_drive_pid(18, 40, true); // move to middle
-  chassis.wait_drive();
-
-  chassis.set_turn_pid(-39, SWING_SPEED); // face goal
-  chassis.wait_drive();
-
-  indexer.move(0);
-
-  chassis.set_drive_pid(7, DRIVE_SPEED, true);
-  chassis.wait_drive();
-
-  pros::delay(600);
-  
-  /*// uncomment for only shooting
-  FW.move(0.99 * 127 * reverseFW); // start flywheel
-  FW2.move(0.99 * 127 * reverseFW2);
-  intake.move(127 * reverseIntake);
-  pros::delay(4000);*/
-
-  for (int i = 0; i < 2; i++) {
-    indexer.move(indexerFeedSpeed * reverseIndexer);
-    pros::delay(400);
-
-    indexer.move(-indexerFeedSpeed * reverseIndexer);
-    pros::delay(500);
-    indexer.move(0);
-    pros::delay(400);
-  }
-  
-  indexer.move(indexerFeedSpeed * reverseIndexer);
-  pros::delay(400);
-  indexer.move(0);
-  pros::delay(200);
-
-  FW.move(0);
-  FW2.move(0);
-
-  intake.move(127 * reverseIntake);
-  indexer.move(-127 * reverseIndexer);
-
-  chassis.set_drive_pid(-12, DRIVE_SPEED, true);
-  chassis.wait_drive();
-
-  chassis.set_swing_pid(ez::LEFT_SWING, 41, SWING_SPEED);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(81, DRIVE_SPEED, true);
-  chassis.wait_drive();
-
-  intake.move(0);
-  indexer.move(60 * reverseIndexer);
-
-  chassis.set_turn_pid(-90, TURN_SPEED);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(-4, DRIVE_SPEED, true); // back into roller
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(3, DRIVE_SPEED, true);
-  chassis.wait_drive();
-
-  indexer.move(0);
-}
+}*/

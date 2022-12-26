@@ -12,6 +12,7 @@ void modified_exit_condition();
 void left_side();
 void right_side();
 void solo_awp();
+void programmingSkills();
 
 // extensions
 void closePreload();

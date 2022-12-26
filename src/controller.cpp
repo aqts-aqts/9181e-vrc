@@ -7,9 +7,9 @@ double derivative;
 double motorPower;
 
 namespace global {
-    void aim(bool team, double maxVel=110) {
+    void aim(bool team, double bound) {
         pros::vision_object_s_t goal;
-        while (goal.x_middle_coord < boundary) {
+        while (goal.x_middle_coord < bound) {
             goal = pros::c::vision_get_by_sig(VISION_PORT, 0, (team) ? RED_SIG: BLUE_SIG);
             totalError += goal.x_middle_coord;
             derivative = goal.x_middle_coord - prevError;
@@ -22,10 +22,10 @@ namespace global {
         }
     }
 
-    void roll(bool team, double iV=-127, bool stop=1) {
+    void roll(bool team, double volts=-127, bool stop=1) {
         pros::c::optical_rgb_s_t rgb = colour.get_rgb();
         bool rolled = (team) ? (rgb.red > rgb.blue): (rgb.blue < rgb.red); // blue = 0, red = 1
-        indexer.move(iV * reverseIndexer);
+        indexer.move(volts * reverseIndexer);
         while (!rolled) pros::delay(10);
         if (stop) indexer.move(0);
     }
