@@ -29,4 +29,10 @@ namespace global {
         while (!rolled) pros::delay(10);
         if (stop) indexer.move(0);
     }
+
+    void back(double maxV) {
+        double distance = (wall.get() - rollerDist) / 25.4;
+        chassis.set_drive_pid(-distance, maxV, true);
+        chassis.wait_drive();
+    }
 }

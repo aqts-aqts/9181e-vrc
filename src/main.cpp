@@ -46,6 +46,7 @@ Drive chassis (
 
 void initialize() {
   // Print our branding over your terminal :D
+  expansion.set_value(1);
   init();
   ez::print_ez_template();
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
@@ -53,7 +54,7 @@ void initialize() {
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
   chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
-  chassis.set_curve_default(0.3, 0.3); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+  chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
@@ -77,7 +78,7 @@ void disabled() {
 }
 
 void competition_initialize() {
-  // . . .
+  expansion.set_value(1);
 }
 
 void autonomous() {
@@ -103,7 +104,7 @@ void opcontrol() {
   intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   indexer.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
-  chassis.set_drive_current_limit(1500);
+  chassis.set_drive_current_limit(1800);
 
   while (true) {
     // chassis.tank(); // Tank control
@@ -132,7 +133,7 @@ void opcontrol() {
       flyPower = 0.98;
       prevPower = elapsed;
     } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && elapsed - prevPower > 100) {
-      flyPower = 0.825;
+      flyPower = 0.82;
       prevPower = elapsed;
     }
 
@@ -153,7 +154,7 @@ void opcontrol() {
 
     // Rollers
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-      indexer.move(-127 * reverseIntake); // Roll in
+      indexer.move(-60 * reverseIntake); // Roll in
     }
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) { // outtake
       intake.move(-127 * reverseIntake);
@@ -162,7 +163,9 @@ void opcontrol() {
 
     // Limit drive current
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) chassis.set_drive_current_limit(2500);
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) chassis.set_drive_current_limit(1500);
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) chassis.set_drive_current_limit(1800);
+
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X) && elapsed > 0) expansion.set_value(1);
 
     // Index discs
     // if (indexer.get() - prevDist > minDiscWidth) {

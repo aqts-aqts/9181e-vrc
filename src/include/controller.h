@@ -13,7 +13,10 @@
 #define aimkI 0
 #define aimkD 0
 
+#define rollerDist 70
+
 namespace global {
     void aim(bool team, double bound);
     void roll(bool team, double volts, bool stop);
+    void back(double maxV);
 }

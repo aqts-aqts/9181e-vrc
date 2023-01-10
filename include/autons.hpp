@@ -18,3 +18,4 @@ void programmingSkills();
 void closePreload();
 void shootFirst();
 void threeDiscs();
+void test();

@@ -9,18 +9,18 @@ namespace global {
     pros::Motor intake(11, pros::E_MOTOR_GEARSET_18);
     pros::Motor indexer(3, pros::E_MOTOR_GEARSET_36);
 
+    pros::Distance wall(7);
     pros::Optical colour(0);
     pros::Vision vision(0);
     pros::ADIEncoder encoder(0, 0);
-    pros::ADIDigitalOut SL(0, 0);
-    pros::ADIDigitalOut SR(0, 0);
+    pros::ADIDigitalOut expansion(1, 0);
     
     double flyVelocity;
     double flyPower;
     int elapsed;
 
     void init() {
-        flyPower = 0.825; // Flywheel power percentage
+        flyPower = 0.82; // Flywheel power percentage
         elapsed = 0; // Time since opcontrol started
         // discs = 0; // Number of disks 
 

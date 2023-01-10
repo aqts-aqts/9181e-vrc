@@ -19,10 +19,10 @@ namespace global {
     extern pros::Motor intake;
     extern pros::Motor indexer;
 
+    extern pros::Distance wall;
     extern pros::Optical colour;
     extern pros::Vision vision;
-    extern pros::ADIDigitalOut SL;
-    extern pros::ADIDigitalOut SR;
+    extern pros::ADIDigitalOut expansion;
     extern pros::ADIEncoder encoder;
 
     extern void init();
